@@ -11,10 +11,67 @@ eventListeners()
 
 function eventListeners() {
     form.addEventListener('submit', addTodo)
-
+    document.addEventListener('DOMContentLoaded',loadAllTodosToUI)
+    secondCardBody.addEventListener('click', deleteTodo)
+    filter.addEventListener('keyup', filterTodos)
+    clearButton.addEventListener('click', clearAllTodos)
 }
 
 
+function clearAllTodos(e) {
+    if (confirm('Emin misin?')) {
+        while(todoList.firstElementChild !== null) {
+            todoList.removeChild(todoList.firstElementChild)
+        }
+        localStorage.removeItem('todos')
+    }
+}
+
+function filterTodos(e) {
+    const filtervalue = e.target.value.toLowerCase()
+    const listItems = document.querySelectorAll('li.list-group-item')
+
+    listItems.forEach(listItem => {
+        const text = listItem.textContent.toLowerCase()
+
+        if (!(text.includes(filtervalue))) {
+            listItem.setAttribute('style', 'display : none !important')
+        }
+        else{
+            listItem.setAttribute('style', 'display : block')
+        }
+    })
+}
+
+
+function deleteTodo(e) {
+    if (e.target.className === 'fa fa-remove') {
+        e.target.parentElement.parentElement.remove()
+        deleteTodoFromStorage(e.target.parentElement.parentElement.textContent)
+        showAlert('success','Todo basari ile silindi.')
+    }
+}
+
+function deleteTodoFromStorage(deletetodo) {
+    let todos = getTodosFromStorage()
+
+    todos.forEach((todo,index) => {
+        if (todo === deletetodo) {
+            todos.splice(index,1)
+        }
+        localStorage.setItem('todos',JSON.stringify(todos))
+    });
+    
+
+}
+
+function loadAllTodosToUI() {
+    let todos = getTodosFromStorage()
+
+    todos.forEach(todo => {
+        addTodoToUI(todo)
+    });
+}
 
 function addTodo(e) {
     const newTodo = todoInput.value.trim()
@@ -66,13 +123,8 @@ function showAlert(type,message) {
 
     setTimeout(_ => {
         alert.remove()
-    },5000)
-
+    },2000)
 }
-
-
-
-
 
 
 
@@ -95,5 +147,5 @@ function addTodoToUI(newTodo) {
 }
 
 
-// todoInputa deyer daxil edilmeyende ne edek?
+
 // bu layihede event bubblinglere nezer yetir
