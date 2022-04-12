@@ -18,12 +18,14 @@ function eventListeners() {
 }
 
 
-function clearAllTodos(e) {
+function clearAllTodos() {
     if (confirm('Emin misin?')) {
         while(todoList.firstElementChild !== null) {
             todoList.removeChild(todoList.firstElementChild)
+            // todoList.firstElementChild.remove()
         }
         localStorage.removeItem('todos')
+        showAlert('success','Butun todolar silindi ...')
     }
 }
 
@@ -86,9 +88,6 @@ function addTodo(e) {
         showAlert('success','Todo basari ile eklendi.')
     }
     
-
-
-
     e.preventDefault()
 }
 
@@ -116,13 +115,13 @@ function addTodoToStorage(newTodo) {
 
 
 function showAlert(type,message) {
-    const alert = document.createElement('div')
-    alert.className = `alert alert-${type}`
-    alert.textContent = message
-    firstCardBody.appendChild(alert)
+    const div = document.createElement('div')
+    div.className = `alert alert-${type}`
+    div.textContent = message
+    firstCardBody.appendChild(div)
 
     setTimeout(_ => {
-        alert.remove()
+        div.remove()
     },2000)
 }
 
